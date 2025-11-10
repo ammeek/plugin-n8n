@@ -89,9 +89,9 @@ public class TriggerWorkflow extends AbstractTriggerWorkflow implements Runnable
     @Override
     public Output run(RunContext runContext) throws Exception {
         HttpRequest httpRequest = buildRequest(runContext);
-        boolean wait = runContext.render(this.wait).as(Boolean.class).orElse(DEFAULT_WAIT);
+        boolean rWait = runContext.render(this.wait).as(Boolean.class).orElse(DEFAULT_WAIT);
 
-        return makeRequest(runContext, httpRequest, wait);
+        return makeRequest(runContext, httpRequest, rWait);
     }
 
     @Builder

@@ -94,39 +94,39 @@ public abstract class AbstractTriggerWorkflow extends Task {
     protected Property<Boolean> wait = Property.ofValue(DEFAULT_WAIT);
 
     protected HttpRequest buildRequest(RunContext runContext) throws Exception {
-        String uri = runContext.render(this.uri).as(String.class).orElseThrow(
+        String rUri = runContext.render(this.uri).as(String.class).orElseThrow(
             () -> new IllegalArgumentException("URL cannot be null")
         );
 
-        URI from = runContext.render(this.from).as(URI.class).orElse(null);
+        URI rFrom = runContext.render(this.from).as(URI.class).orElse(null);
         HttpMethod rMethod = runContext.render(this.method).as(HttpMethod.class)
             .orElseThrow(() -> new IllegalArgumentException("HTTP Method cannot be null"));
 
-        ContentType contentType = runContext.render(this.contentType).as(ContentType.class).orElse(DEFAULT_CONTENT_TYPE);
-        Map<String, ?> body = runContext.render(this.body).asMap(String.class, Object.class);
-        Map<String, ?> queryParameters = runContext.render(this.queryParameters).asMap(String.class, Object.class);
-        Map<String, ?> headers = runContext.render(this.headers).asMap(String.class, Object.class);
+        ContentType rContentType = runContext.render(this.contentType).as(ContentType.class).orElse(DEFAULT_CONTENT_TYPE);
+        Map<String, ?> rBody = runContext.render(this.body).asMap(String.class, Object.class);
+        Map<String, ?> rQueryParameters = runContext.render(this.queryParameters).asMap(String.class, Object.class);
+        Map<String, ?> rHeaders = runContext.render(this.headers).asMap(String.class, Object.class);
 
-        if (from != null && !body.isEmpty()) {
+        if (rFrom != null && !rBody.isEmpty()) {
             throw new IllegalArgumentException("You cannot set both 'from' and 'body' properties at the same time");
         }
 
         HttpRequest.HttpRequestBuilder requestBuilder = HttpRequest.builder()
-            .uri(buildUri(uri, queryParameters))
+            .uri(buildUri(rUri, rQueryParameters))
             .method(rMethod.name());
 
-        headers.forEach((key, value) -> requestBuilder.addHeader(key, value.toString()));
+        rHeaders.forEach((key, value) -> requestBuilder.addHeader(key, value.toString()));
 
-        if (!body.isEmpty()) {
-            setRequestBody(requestBuilder, body);
+        if (!rBody.isEmpty()) {
+            setRequestBody(requestBuilder, rBody);
         }
 
-        if (from != null) {
-            setRequestBody(runContext, requestBuilder, from, contentType);
+        if (rFrom != null) {
+            setRequestBody(runContext, requestBuilder, rFrom, rContentType);
         }
 
-        getAuthentication(runContext).ifPresent(authentication -> {
-            authentication.applyAuthentication(requestBuilder);
+        getAuthentication(runContext).ifPresent(rAuthentication -> {
+            rAuthentication.applyAuthentication(requestBuilder);
         });
 
         return requestBuilder.build();
