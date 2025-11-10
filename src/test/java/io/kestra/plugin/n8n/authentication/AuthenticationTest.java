@@ -1,4 +1,4 @@
-package io.kestra.plugin.templates.authentication;
+package io.kestra.plugin.n8n.authentication;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.kestra.core.serializers.JacksonMapper;

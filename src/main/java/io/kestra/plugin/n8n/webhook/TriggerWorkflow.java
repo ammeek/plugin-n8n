@@ -1,4 +1,4 @@
-package io.kestra.plugin.templates.webhook;
+package io.kestra.plugin.n8n.webhook;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.kestra.core.http.HttpRequest;
@@ -27,13 +27,59 @@ import java.util.function.Consumer;
 @NoArgsConstructor
 @Schema(
     title = "Trigger a N8N workflow via a webhook",
-    description = "Full description of this task"
+    description = "This task allows you to execute n8n workflows from within Kestra by calling their webhook URLs. " +
+        "See the [N8N Webhook Docs](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook/) " +
+        "for more information on getting started with N8N Webhooks."
 )
 @Plugin(
     examples = {
         @io.kestra.core.models.annotations.Example(
-            title = "Simple revert",
-            code = { "format: \"Text to be reverted\"" }
+            title = "Simple Trigger Workflow",
+            full = true,
+            code = {"""
+                id: n8n_webhook_trigger
+                namespace: company.team
+
+                tasks:
+                  - id: trigger_workflow
+                    type: io.kestra.plugin.n8n.webhook.TriggerWorkflow
+                    method: POST
+                    uri: https://n8n.example.com/webhook/213e8fbc-f843-428c-9860-ab9f64e5ef3b
+                """ }
+        ),
+        @io.kestra.core.models.annotations.Example(
+            title = "Trigger Workflow With Basic Auth",
+            full = true,
+            code = {"""
+                id: n8n_webhook_trigger_with_auth
+                namespace: company.team
+
+                tasks:
+                  - id: trigger_workflow
+                    type: io.kestra.plugin.n8n.webhook.TriggerWorkflow
+                    authentication:\s
+                      type: BasicAuth
+                      username: "{{ secret('N8N_WEBHOOK_USERNAME') }}"
+                      password: "{{ secret('N8N_WEBHOOK_PASSWORD') }}"
+                    method: POST
+                    uri: https://n8n.example.com/webhook/213e8fbc-f843-428c-9860-ab9f64e5ef3b
+                """ }
+        ),
+        @io.kestra.core.models.annotations.Example(
+            title = "Trigger Workflow With Body",
+            full = true,
+            code = {"""
+                id: n8n_webhook_trigger_with_body
+                namespace: company.team
+
+                tasks:
+                  - id: trigger_workflow
+                    type: io.kestra.plugin.n8n.webhook.TriggerWorkflow
+                    body:
+                      keyOne: valueOne
+                    method: POST
+                    uri: http://n8n:5678/webhook/213e8fbc-f843-428c-9860-ab9f64e5ef3b
+                """ }
         )
     }
 )

@@ -1,4 +1,4 @@
-package io.kestra.plugin.templates;
+package io.kestra.plugin.n8n;
 
 public enum ContentType {
     TEXT("text/plain"),

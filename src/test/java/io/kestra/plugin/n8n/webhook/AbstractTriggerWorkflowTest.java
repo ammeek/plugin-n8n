@@ -1,4 +1,4 @@
-package io.kestra.plugin.templates.webhook;
+package io.kestra.plugin.n8n.webhook;
 
 import io.kestra.core.http.HttpRequest;
 import io.kestra.core.junit.annotations.KestraTest;
@@ -7,8 +7,8 @@ import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.storages.Storage;
-import io.kestra.plugin.templates.ContentType;
-import io.kestra.plugin.templates.HttpMethod;
+import io.kestra.plugin.n8n.ContentType;
+import io.kestra.plugin.n8n.HttpMethod;
 import jakarta.inject.Inject;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

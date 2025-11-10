@@ -1,4 +1,4 @@
-package io.kestra.plugin.templates.authentication;
+package io.kestra.plugin.n8n.authentication;
 
 import io.kestra.core.http.HttpRequest;
 import jakarta.validation.constraints.NotNull;

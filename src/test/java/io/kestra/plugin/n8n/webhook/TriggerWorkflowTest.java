@@ -1,4 +1,4 @@
-package io.kestra.plugin.templates.webhook;
+package io.kestra.plugin.n8n.webhook;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -7,7 +7,7 @@ import io.kestra.core.junit.annotations.KestraTest;
 import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
-import io.kestra.plugin.templates.HttpMethod;
+import io.kestra.plugin.n8n.HttpMethod;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

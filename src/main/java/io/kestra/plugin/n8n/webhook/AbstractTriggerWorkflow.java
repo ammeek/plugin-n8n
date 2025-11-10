@@ -1,4 +1,4 @@
-package io.kestra.plugin.templates.webhook;
+package io.kestra.plugin.n8n.webhook;
 
 import io.kestra.core.http.HttpRequest;
 import io.kestra.core.http.client.configurations.HttpConfiguration;
@@ -6,9 +6,9 @@ import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.Task;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.serializers.JacksonMapper;
-import io.kestra.plugin.templates.ContentType;
-import io.kestra.plugin.templates.HttpMethod;
-import io.kestra.plugin.templates.authentication.Authentication;
+import io.kestra.plugin.n8n.ContentType;
+import io.kestra.plugin.n8n.HttpMethod;
+import io.kestra.plugin.n8n.authentication.Authentication;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -42,7 +42,7 @@ public abstract class AbstractTriggerWorkflow extends Task {
 
     @Schema(
         title = "N8N webhook URL",
-        description = "The webhook URL endpoint from your n8n workflow. Use the Test URL for development or Production URL for live workflows. n8n generates unique URLs to avoid conflicts."
+        description = "The webhook URL endpoint from your n8n workflow. Use the Test URL for development or Production URL for live workflows."
     )
     @NotNull
     private Property<String> uri;
