@@ -68,7 +68,7 @@ public class TriggerWorkflow extends AbstractTriggerWorkflow implements Runnable
     private static Consumer<HttpResponse<InputStream>> handleResponse(boolean wait, CompletableFuture<Output> completableFuture) {
         return (HttpResponse<InputStream> response) -> {
             if (response.getStatus().getCode() != 200) {
-                completableFuture.completeExceptionally(new Exception("Received non-200 response from Apify API: " + response.getStatus().getCode()));
+                completableFuture.completeExceptionally(new Exception("Received non-200 response from Webhook: " + response.getStatus().getCode()));
                 return;
             }
 
