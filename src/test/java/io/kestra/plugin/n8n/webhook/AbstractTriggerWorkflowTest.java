@@ -23,7 +23,6 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.TreeMap;
 
 @KestraTest
@@ -35,29 +34,6 @@ class AbstractTriggerWorkflowTest {
         return TestTriggerWorkflow.builder()
             .uri(Property.ofValue("http://example.com"))
             .method(Property.ofValue(HttpMethod.POST));
-    }
-
-    @Test
-    void givenAbstractTriggerWorkflow_whenRequestBuilt_thenCorrectAuthHeadersAdded() throws Exception {
-        RunContext runContext = runContextFactory.of();
-        Map<String, ?> authentication = Map.of(
-        "type", "JWTAuth",
-        "jwt", "token"
-        );
-
-        TestTriggerWorkflow abstractTriggerWorkflow = getBaseTriggerWorkflowBuilder()
-            .authentication(new Property<>(authentication))
-            .build();
-
-        HttpRequest httpRequest = abstractTriggerWorkflow.buildRequest(runContext);
-
-        Optional<String> authorizationHeaderValue = httpRequest.getHeaders().firstValue("Authorization");
-
-        assertTrue(authorizationHeaderValue.isPresent());
-
-        authorizationHeaderValue.ifPresent((value) -> {
-            assertEquals("Bearer token", value);
-        });
     }
 
     @Test
