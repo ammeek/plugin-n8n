@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.kestra.core.http.HttpRequest;
 import io.kestra.core.http.HttpResponse;
 import io.kestra.core.http.client.HttpClient;
+import io.kestra.core.http.client.configurations.HttpConfiguration;
+import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.tasks.Output;
 import io.kestra.core.models.tasks.RunnableTask;
@@ -17,6 +19,7 @@ import lombok.experimental.SuperBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
@@ -33,10 +36,10 @@ import java.util.function.Consumer;
 )
 @Plugin(
     examples = {
-        @io.kestra.core.models.annotations.Example(
+        @Example(
             title = "Simple Trigger Workflow",
             full = true,
-            code = {"""
+            code = """
                 id: n8n_webhook_trigger
                 namespace: company.team
 
@@ -45,27 +48,28 @@ import java.util.function.Consumer;
                     type: io.kestra.plugin.n8n.webhook.TriggerWorkflow
                     method: POST
                     uri: https://n8n.example.com/webhook/213e8fbc-f843-428c-9860-ab9f64e5ef3b
-                """ }
+                """
         ),
-        @io.kestra.core.models.annotations.Example(
+        @Example(
             title = "Trigger Workflow With Basic Auth",
             full = true,
-            code = {"""
+            code = """
                 id: n8n_webhook_trigger_with_auth
                 namespace: company.team
 
                 tasks:
                   - id: trigger_workflow
                     type: io.kestra.plugin.n8n.webhook.TriggerWorkflow
-                    authentication:
-                      type: BasicAuth
-                      username: "{{ secret('N8N_WEBHOOK_USERNAME') }}"
-                      password: "{{ secret('N8N_WEBHOOK_PASSWORD') }}"
+                    options:
+                      auth:
+                        type: BASIC
+                        username: "{{ secret('N8N_WEBHOOK_USERNAME') }}"
+                        password: "{{ secret('N8N_WEBHOOK_PASSWORD') }}"
                     method: POST
                     uri: https://n8n.example.com/webhook/213e8fbc-f843-428c-9860-ab9f64e5ef3b
-                """ }
+                """
         ),
-        @io.kestra.core.models.annotations.Example(
+        @Example(
             title = "Trigger Workflow With Body",
             full = true,
             code = {"""
@@ -103,7 +107,7 @@ public class TriggerWorkflow extends AbstractTriggerWorkflow implements Runnable
 
     private TriggerWorkflow.Output makeRequest(RunContext runContext, HttpRequest request, boolean wait) throws Exception {
         CompletableFuture<TriggerWorkflow.Output> completableFuture = new CompletableFuture<>();
-        try (HttpClient client = new HttpClient(runContext, options)) {
+        try (HttpClient client = new HttpClient(runContext, this.options)) {
             client.request(request, handleResponse(wait, completableFuture));
         } catch (Exception e) {
             throw new RuntimeException(e);

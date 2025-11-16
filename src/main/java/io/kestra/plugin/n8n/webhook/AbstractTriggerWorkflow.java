@@ -5,10 +5,8 @@ import io.kestra.core.http.client.configurations.HttpConfiguration;
 import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.Task;
 import io.kestra.core.runners.RunContext;
-import io.kestra.core.serializers.JacksonMapper;
 import io.kestra.plugin.n8n.ContentType;
 import io.kestra.plugin.n8n.HttpMethod;
-import io.kestra.plugin.n8n.authentication.Authentication;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -20,7 +18,6 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
-import java.util.Optional;
 
 @SuperBuilder
 @ToString
@@ -31,14 +28,8 @@ public abstract class AbstractTriggerWorkflow extends Task {
     private static final ContentType DEFAULT_CONTENT_TYPE = ContentType.BINARY;
     protected static final boolean DEFAULT_WAIT = true;
 
-    @Schema(
-        title = "Authentication Details for the n8n webhook",
-        description = "Authentication method for the n8n webhook. Supports Basic auth, Header auth, JWT auth, or None. Configure credentials to secure your webhook endpoint."
-    )
-    private Property<Authentication> authentication;
-
     @Schema(title = "The HTTP client configuration.")
-    HttpConfiguration options;
+    protected HttpConfiguration options;
 
     @Schema(
         title = "n8n webhook URL",
@@ -88,7 +79,7 @@ public abstract class AbstractTriggerWorkflow extends Task {
 
     @Schema(
         title = "Wait for Response",
-        description = "Whether to wait for the n8n webhook response. When true, waits for the workflow to complete based on the webhook's response mode (immediate, deferred, or streaming)."
+        description = "Whether to wait for the n8n webhook response. When true, Kestra waits for the workflow to complete according to the response mode configured in n8n (immediate, deferred, or streaming)."
     )
     @Builder.Default
     protected Property<Boolean> wait = Property.ofValue(DEFAULT_WAIT);
@@ -125,10 +116,6 @@ public abstract class AbstractTriggerWorkflow extends Task {
             setRequestBody(runContext, requestBuilder, rFrom, rContentType);
         }
 
-        getAuthentication(runContext).ifPresent(rAuthentication -> {
-            rAuthentication.applyAuthentication(requestBuilder);
-        });
-
         return requestBuilder.build();
     }
 
@@ -163,24 +150,5 @@ public abstract class AbstractTriggerWorkflow extends Task {
         };
 
         requestBuilder.body(requestBody);
-    }
-
-    /*
-    Polymorphic configuration objects with @JsonTypeInfo/@JsonSubTypes don't deserialize correctly
-    when wrapped in Property<>. Jackson cannot resolve the type discriminator ('type' field)
-    during Property deserialization, causing "missing type id property 'type'" errors.
-    To get round this, we first render the Property as a Map and then cast it to the target class.
-     */
-    private Optional<Authentication> getAuthentication(RunContext runContext) throws Exception {
-        Map<?, ?> rAuthentication = (Map<?,?>) runContext.render(this.authentication).asMap(String.class, Object.class);
-
-        if (rAuthentication.isEmpty()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(JacksonMapper.cast(
-            rAuthentication,
-            Authentication.class
-        ));
     }
 }
