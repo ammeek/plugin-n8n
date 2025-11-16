@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 @KestraTest(startRunner = true)
 class TriggerWorkflowTest {
     @Inject
-    RunContextFactory runContextFactory = new RunContextFactory();
+    final RunContextFactory runContextFactory = new RunContextFactory();
 
     private static final String N8N_PATH = "http://localhost:5678";
     private static final String WEBHOOK_PATH = "webhook";

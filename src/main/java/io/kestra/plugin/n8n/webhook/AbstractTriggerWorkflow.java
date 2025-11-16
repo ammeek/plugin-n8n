@@ -121,9 +121,7 @@ public abstract class AbstractTriggerWorkflow extends Task {
 
     private URI buildUri(String url, Map<String, ?> queryParameters) throws URISyntaxException {
         URIBuilder uriBuilder = new URIBuilder(url);
-        queryParameters.forEach((key, value) -> {
-            uriBuilder.addParameter(key, value.toString());
-        });
+        queryParameters.forEach((key, value) -> uriBuilder.addParameter(key, value.toString()));
 
         return uriBuilder.build();
     }
