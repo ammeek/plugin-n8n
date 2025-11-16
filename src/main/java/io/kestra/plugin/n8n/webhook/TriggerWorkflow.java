@@ -70,7 +70,7 @@ import java.util.function.Consumer;
         @Example(
             title = "Trigger Workflow With Body",
             full = true,
-            code = {"""
+            code = """
                 id: n8n_webhook_trigger_with_body
                 namespace: company.team
 
@@ -81,7 +81,7 @@ import java.util.function.Consumer;
                       keyOne: valueOne
                     method: POST
                     uri: http://n8n:5678/webhook/213e8fbc-f843-428c-9860-ab9f64e5ef3b
-                """ }
+                """
         )
     }
 )
