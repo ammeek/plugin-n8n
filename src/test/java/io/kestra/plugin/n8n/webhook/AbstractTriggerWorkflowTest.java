@@ -28,7 +28,7 @@ import java.util.TreeMap;
 @KestraTest
 class AbstractTriggerWorkflowTest {
     @Inject
-    final RunContextFactory runContextFactory = new RunContextFactory();
+    RunContextFactory runContextFactory = new RunContextFactory();
 
     private TestTriggerWorkflow.TestTriggerWorkflowBuilder<?,?> getBaseTriggerWorkflowBuilder() {
         return TestTriggerWorkflow.builder()
